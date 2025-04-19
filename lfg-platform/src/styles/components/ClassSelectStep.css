@@ -1,0 +1,70 @@
+@keyframes neonPulse {
+  0% {
+    box-shadow: 0 0 5px #3b82f6, 0 0 10px #3b82f6, 0 0 15px #3b82f6;
+  }
+  50% {
+    box-shadow: 0 0 10px #3b82f6, 0 0 20px #3b82f6, 0 0 30px #3b82f6;
+  }
+  100% {
+    box-shadow: 0 0 5px #3b82f6, 0 0 10px #3b82f6, 0 0 15px #3b82f6;
+  }
+}
+
+.shadow-neon-blue {
+  animation: neonPulse 2s infinite;
+}
+
+.font-cyber {
+  font-family: 'Orbitron', 'Rajdhani', sans-serif;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Custom scrollbar for the class grid */
+.class-grid::-webkit-scrollbar {
+  width: 8px;
+}
+
+.class-grid::-webkit-scrollbar-track {
+  background: #1f2937;
+  border-radius: 4px;
+}
+
+.class-grid::-webkit-scrollbar-thumb {
+  background: #3b82f6;
+  border-radius: 4px;
+}
+
+.class-grid::-webkit-scrollbar-thumb:hover {
+  background: #2563eb;
+}
+
+/* Hover effect for class cards */
+.class-card {
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.class-card:hover {
+  transform: translateY(-2px);
+}
+
+/* Progress bar animation */
+.progress-bar {
+  background: linear-gradient(90deg, 
+    rgba(59, 130, 246, 0.5) 0%,
+    rgba(59, 130, 246, 1) 50%,
+    rgba(59, 130, 246, 0.5) 100%
+  );
+  background-size: 200% 100%;
+  animation: progressShine 2s linear infinite;
+}
+
+@keyframes progressShine {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+} 

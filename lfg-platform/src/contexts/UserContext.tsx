@@ -21,6 +21,7 @@ const UserContext = createContext<{
     activatePlayerMode: async () => {},
     activateContractorMode: async () => {},
     selectClass: async () => {},
+    resetUser: () => {},
   },
 });
 
@@ -79,10 +80,10 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const loadUser = async () => {
       try {
         // In a real app, this would be an API call
-        // For now, we'll use the mock user
+        // For now, we'll start with no user to see the landing page
         setTimeout(() => {
           setState({
-            user: mockUser,
+            user: null,
             isLoading: false,
             error: null,
           });
@@ -446,6 +447,13 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           error: 'Failed to select class',
         });
       }
+    },
+    resetUser: () => {
+      setState({
+        user: null,
+        isLoading: false,
+        error: null,
+      });
     },
   };
 

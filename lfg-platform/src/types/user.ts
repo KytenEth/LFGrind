@@ -37,7 +37,7 @@ export enum PlayerClass {
   TESTER = 'TESTER',
   PRODUCT_MANAGER = 'PRODUCT_MANAGER',
   PROJECT_MANAGER = 'PROJECT_MANAGER',
-  GUILD_LEADER = 'GUILD_LEADER'
+  CONTRACTOR = 'CONTRACTOR'
 }
 
 // Class Archetype
@@ -53,7 +53,9 @@ export enum ClassArchetype {
   TANK = 'TANK',
   MONK = 'MONK',
   ROYAL_COMMANDER = 'ROYAL_COMMANDER',
-  ARCHITECT = 'ARCHITECT'
+  ARCHITECT = 'ARCHITECT',
+  MERCENARY = 'MERCENARY',
+  CROWNFORGER = 'CROWNFORGER'
 }
 
 // Class information for a player
@@ -105,4 +107,5 @@ export interface UserActions {
   activatePlayerMode: () => Promise<void>;
   activateContractorMode: () => Promise<void>;
   selectClass: (playerClass: PlayerClass, archetype: ClassArchetype) => Promise<void>;
+  resetUser: () => void;
 } 

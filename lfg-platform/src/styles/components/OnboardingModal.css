@@ -1,0 +1,116 @@
+.wallet-modal {
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+  width: 100%;
+  max-width: 800px;
+  background: rgba(13, 17, 28, 0.95);
+  border-radius: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.wallet-modal-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.modal-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: var(--background-light);
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0;
+  transition: opacity 0.2s ease;
+}
+
+.back-button:hover {
+  opacity: 0.8;
+}
+
+.back-button svg {
+  width: 20px;
+  height: 20px;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  padding: 0;
+  transition: opacity 0.2s ease;
+}
+
+.modal-close:hover {
+  opacity: 0.8;
+}
+
+.modal-close svg {
+  width: 20px;
+  height: 20px;
+}
+
+.modal-header-content {
+  text-align: center;
+  width: 100%;
+}
+
+h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2.5rem;
+  margin: 0 0 1rem;
+  color: #fff;
+  text-shadow: 
+    0 0 20px rgba(255, 255, 255, 0.4),
+    0 0 40px rgba(78, 161, 255, 0.6);
+  letter-spacing: 0.05em;
+}
+
+.subtitle {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.1rem;
+  margin: 0;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+.progress-bar {
+  height: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 1rem -2rem;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #4EA1FF;
+  transition: width 0.3s ease;
+} 
