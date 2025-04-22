@@ -1,15 +1,18 @@
 import React, { useState, useCallback } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { AbstractAppProvider } from './providers/AbstractProvider';
 import { UserProvider, useUser } from './contexts/UserContext';
 import { UserRole } from './types/user';
 import LandingPage from './pages/landing/LandingPage';
-import { PlayerDashboard } from './pages/player/PlayerDashboard';
-import { ContractorDashboard } from './pages/contractor/ContractorDashboard';
 import { STORAGE_KEYS } from './constants/storage';
 import './App.css';
 import { useLoginWithAbstract, useGlobalWalletSignerClient } from '@abstract-foundation/agw-react';
 import { disconnectAbstractWallet } from './utils/walletUtils';
+import OnboardingModal from './components/modals/OnboardingModal';
+import NicknameModal from './components/modals/NicknameModal';
+import BaseDashboard from './components/shared/BaseDashboard';
+import QuestFeedPage from './pages/QuestFeedPage';
+import TeamsPage from './pages/TeamsPage';
 
 const AppContent = () => {
   const { state, actions } = useUser();
@@ -18,6 +21,7 @@ const AppContent = () => {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [logoutError, setLogoutError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const location = useLocation();
   const { logout } = useLoginWithAbstract();
   const { data: client } = useGlobalWalletSignerClient();
 
@@ -30,8 +34,10 @@ const AppContent = () => {
     
     if (state.user.roles.includes(UserRole.PLAYER)) {
       actions.activateContractorMode();
+      navigate('/contractor');
     } else {
       actions.activatePlayerMode();
+      navigate('/player');
     }
   };
 
@@ -85,7 +91,7 @@ const AppContent = () => {
 
   return (
     <div className="app">
-      {location.pathname !== '/' && (
+      {location.pathname !== '/' && !location.pathname.startsWith('/player') && (
         <header className="header">
           <nav className="nav">
             <div className="logo" data-text="LFG">LFG</div>
@@ -118,8 +124,29 @@ const AppContent = () => {
 
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/dashboard" element={<PlayerDashboard />} />
-        <Route path="/contractor-dashboard" element={<ContractorDashboard />} />
+        
+        {/* Player Routes */}
+        <Route path="/player/*" element={<BaseDashboard userType="player" />}>
+          <Route index element={<div>Player Home</div>} />
+          <Route path="quests" element={<QuestFeedPage />} />
+          <Route path="squad" element={<TeamsPage />} />
+          <Route path="inventory" element={<div>Player Inventory</div>} />
+          <Route path="settings" element={<div>Player Settings</div>} />
+        </Route>
+        
+        {/* Contractor Routes */}
+        <Route path="/contractor/*" element={<BaseDashboard userType="contractor" />}>
+          <Route index element={<div>Contractor Home</div>} />
+          <Route path="quests" element={<QuestFeedPage />} />
+          <Route path="squad" element={<TeamsPage />} />
+          <Route path="inventory" element={<div>Contractor Inventory</div>} />
+          <Route path="settings" element={<div>Contractor Settings</div>} />
+        </Route>
+
+        {/* Redirect old dashboard paths to new ones */}
+        <Route path="/dashboard" element={<Navigate to="/player" replace />} />
+        <Route path="/contractor-dashboard" element={<Navigate to="/contractor" replace />} />
+        
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
 
@@ -180,16 +207,18 @@ const AppContent = () => {
   );
 };
 
-function App() {
+const App = () => {
   return (
-    <AbstractAppProvider>
-      <UserProvider>
-        <Router>
+    <Router>
+      <AbstractAppProvider>
+        <UserProvider>
           <AppContent />
-        </Router>
-      </UserProvider>
-    </AbstractAppProvider>
+        </UserProvider>
+      </AbstractAppProvider>
+    </Router>
   );
-}
+};
 
 export default App;
+
+

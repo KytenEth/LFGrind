@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaTimes, FaPowerOff, FaArrowLeft, FaCheck, FaTimes as FaError } from 'react-icons/fa';
 import { useLoginWithAbstract, useGlobalWalletSignerClient } from '@abstract-foundation/agw-react';
-import { PlayerClass, ClassArchetype } from '../../types/user';
+import { useNavigate } from 'react-router-dom';
+import { PlayerClass, ClassArchetype, UserRole } from '../../types/user';
 import { useUser } from '../../contexts/UserContext';
 import './OnboardingModal.css';
 import { ClassSelection } from '../ClassSelection';
@@ -23,6 +24,7 @@ interface OnboardingState {
   walletAddress?: string;
   nickname?: string;
   isCompleted: boolean;
+  completedAt?: string;
 }
 
 interface ClassData {
@@ -115,6 +117,7 @@ const OnboardingModal: React.FC<OnboardingModalProps> = ({ onConnected, onClose 
   const [selectedClass, setSelectedClass] = useState<ClassData | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const prevConnectedRef = useRef(false);
+  const navigate = useNavigate();
 
   const walletAddress = client?.account?.address;
   const shortAddress = walletAddress ? `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}` : '';
@@ -279,15 +282,38 @@ const OnboardingModal: React.FC<OnboardingModalProps> = ({ onConnected, onClose 
   };
 
   const handleBeginGrind = async () => {
-    try {
-      setError(null);
-      // Show success animation
-      setShowSuccessEffects(true);
-      audioRef.current?.play();
-      
-      if (!selectedClass) return;
+    const cleanup = () => {
+      setShowSuccessEffects(false);
+      audioRef.current?.pause();
+      audioRef.current?.currentTime && (audioRef.current.currentTime = 0);
+    };
 
-      // Save complete user data
+    try {
+      // Validate required data
+      if (!selectedClass) {
+        throw new Error('Please select a class to continue');
+      }
+      if (!walletAddress) {
+        throw new Error('Wallet connection required');
+      }
+      if (!nickname) {
+        throw new Error('Nickname is required');
+      }
+
+      setError(null);
+      setShowSuccessEffects(true);
+      
+      // Play success sound if available
+      if (audioRef.current?.readyState === 4) {
+        audioRef.current.play().catch(console.error);
+      }
+
+      // Determine user role based on class archetype
+      const userRole = selectedClass.id === PlayerClass.CONTRACTOR 
+        ? UserRole.CONTRACTOR 
+        : UserRole.PLAYER;
+
+      // Prepare user data
       const userData = {
         walletAddress,
         nickname,
@@ -295,30 +321,67 @@ const OnboardingModal: React.FC<OnboardingModalProps> = ({ onConnected, onClose 
         archetype: selectedClass.archetype,
         level: 1,
         xp: 200,
-        isOnboarded: true
+        isOnboarded: true,
+        roles: [userRole],
+        createdAt: new Date().toISOString(),
+        lastLoginAt: new Date().toISOString()
       };
-      
-      localStorage.setItem(STORAGE_KEYS.USER_DATA, JSON.stringify(userData));
-      
-      // Mark onboarding as completed
+
+      // Save user data with error handling
+      try {
+        localStorage.setItem(STORAGE_KEYS.USER_DATA, JSON.stringify(userData));
+      } catch (storageError) {
+        console.error('Storage error:', storageError);
+        throw new Error('Failed to save user data. Please check your browser storage settings.');
+      }
+
+      // Update onboarding state
       const state: OnboardingState = {
         currentStep: 'confirmation',
         walletAddress: walletAddress,
         nickname: nickname,
-        isCompleted: true
+        isCompleted: true,
+        completedAt: new Date().toISOString()
       };
-      localStorage.setItem(STORAGE_KEYS.ONBOARDING_STATE, JSON.stringify(state));
-      
-      // Wait for animation to complete before proceeding
-      setTimeout(() => {
-        setShowSuccessEffects(false);
+
+      try {
+        localStorage.setItem(STORAGE_KEYS.ONBOARDING_STATE, JSON.stringify(state));
+      } catch (storageError) {
+        console.error('Storage error:', storageError);
+        localStorage.removeItem(STORAGE_KEYS.USER_DATA);
+        throw new Error('Failed to save onboarding state. Please try again.');
+      }
+
+      // Create cleanup timeout
+      const timeoutId = setTimeout(() => {
+        cleanup();
+        
+        // Call onConnected callback
         onConnected(nickname);
-        // Redirect to dashboard
-        window.location.href = '/dashboard';
+        
+        // Navigate to appropriate dashboard using React Router
+        const dashboardPath = userRole === UserRole.CONTRACTOR ? '/contractor/quests' : '/player/quests';
+        navigate(dashboardPath, { replace: true });
       }, 2000);
+
+      // Cleanup on unmount
+      return () => {
+        clearTimeout(timeoutId);
+        cleanup();
+      };
+
     } catch (err) {
-      setError('Failed to complete onboarding. Please try again.');
-      setShowSuccessEffects(false);
+      cleanup();
+      console.error('Onboarding error:', err);
+      setError(err instanceof Error ? err.message : 'Failed to complete onboarding. Please try again.');
+      
+      // Attempt to clean up any partial data
+      try {
+        localStorage.removeItem(STORAGE_KEYS.USER_DATA);
+        localStorage.removeItem(STORAGE_KEYS.ONBOARDING_STATE);
+      } catch (cleanupError) {
+        console.error('Cleanup error:', cleanupError);
+      }
     }
   };
 

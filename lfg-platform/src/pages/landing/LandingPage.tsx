@@ -4,6 +4,7 @@ import { FaRocket, FaCode, FaUsers, FaCoins, FaChartLine, FaShieldAlt, FaGamepad
 import OnboardingModal from '../../components/modals/OnboardingModal';
 import '../../styles/landing.css';
 import { STORAGE_KEYS } from '../../constants/storage';
+import { UserRole } from '../../types/user';
 
 const LandingPage: React.FC = () => {
   const navigate = useNavigate();
@@ -15,7 +16,9 @@ const LandingPage: React.FC = () => {
     if (userData) {
       const parsedData = JSON.parse(userData);
       if (parsedData.onboardingCompleted) {
-        navigate('/dashboard');
+        // Navigate based on role - contractor or player
+        const dashboardPath = parsedData.roles?.includes(UserRole.CONTRACTOR) ? '/contractor' : '/player';
+        navigate(dashboardPath);
       }
     }
   }, [navigate]);
@@ -27,7 +30,9 @@ const LandingPage: React.FC = () => {
       if (userData) {
         const parsedData = JSON.parse(userData);
         if (parsedData.onboardingCompleted) {
-          navigate('/dashboard');
+          // Navigate based on role - contractor or player
+          const dashboardPath = parsedData.roles?.includes(UserRole.CONTRACTOR) ? '/contractor' : '/player';
+          navigate(dashboardPath);
         } else {
           setShowOnboardingModal(true);
         }
@@ -43,8 +48,7 @@ const LandingPage: React.FC = () => {
 
   const handleOnboardingComplete = (nickname?: string) => {
     setShowOnboardingModal(false);
-    // Navigate to dashboard after onboarding
-    navigate('/dashboard');
+    // Navigation will be handled by the OnboardingModal after role selection
   };
 
   const handleCloseModal = () => {

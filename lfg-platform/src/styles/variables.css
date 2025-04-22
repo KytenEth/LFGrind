@@ -1,0 +1,51 @@
+:root {
+  /* Base colors */
+  --cyber-background: #0a0b0e;
+  --cyber-background-dark: #070809;
+  --cyber-card-bg: #12141a;
+  --cyber-card-bg-light: #1a1d24;
+  --cyber-border: #2a2d36;
+  
+  /* Text colors */
+  --cyber-text: #a7b1c2;
+  --cyber-text-bright: #e2e8f0;
+  --cyber-text-muted: #6b7280;
+  
+  /* Accent colors */
+  --cyber-cyan: #00ffd5;
+  --cyber-cyan-dim: rgba(0, 255, 213, 0.3);
+  --cyber-cyan-glow: rgba(0, 255, 213, 0.15);
+  --cyber-magenta: #ff00ff;
+  --cyber-magenta-dim: rgba(255, 0, 255, 0.3);
+  --cyber-yellow: #ffee00;
+  --cyber-yellow-dim: rgba(255, 238, 0, 0.3);
+  
+  /* Status colors */
+  --cyber-success: #00ff88;
+  --cyber-warning: #ffbb00;
+  --cyber-error: #ff3366;
+  
+  /* Shadows */
+  --cyber-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+  --cyber-shadow-md: 0 4px 8px rgba(0, 0, 0, 0.4);
+  --cyber-shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.5);
+  
+  /* Gradients */
+  --cyber-gradient-primary: linear-gradient(135deg, var(--cyber-cyan), var(--cyber-magenta));
+  --cyber-gradient-dark: linear-gradient(135deg, var(--cyber-background), var(--cyber-card-bg));
+  
+  /* Animations */
+  --cyber-transition-fast: 0.2s ease;
+  --cyber-transition-normal: 0.3s ease;
+  --cyber-transition-slow: 0.5s ease;
+  
+  /* Layout */
+  --cyber-border-radius-sm: 4px;
+  --cyber-border-radius-md: 8px;
+  --cyber-border-radius-lg: 12px;
+  --cyber-spacing-xs: 0.25rem;
+  --cyber-spacing-sm: 0.5rem;
+  --cyber-spacing-md: 1rem;
+  --cyber-spacing-lg: 2rem;
+  --cyber-spacing-xl: 4rem;
+} 
