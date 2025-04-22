@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation, useOutletContext } from 'react-router-dom';
 import { TabSelector } from '../components/shared/TabSelector';
+import { GrindCoin } from '../components/shared/GrindCoin';
 import '../styles/quest-hub.css';
 
 type TaskType = 'quest' | 'bounty';
@@ -82,7 +83,7 @@ const QuestCard: React.FC<QuestCardProps> = ({ task, onClick, isActive }) => {
         </span>
         <span className="reward gc">
           <span className="icon">💎</span>
-          {task.type === 'bounty' ? `${(task as Bounty).rewardPool} GC Pool` : `${task.gcReward} GC`}
+          {task.gcReward} <GrindCoin size="small" />
         </span>
       </div>
 
@@ -166,20 +167,14 @@ const QuestDetailView: React.FC<QuestDetailViewProps> = ({ task, onComplete, onC
               <span className="icon">💎</span>
               <h3>Rewards</h3>
             </div>
-            <div className="rewards-grid">
-              <div className="reward-item xp">
-                <span className="icon">⚡</span>
-                <div className="value">{task.xpReward}</div>
-                <div className="label">XP</div>
+            <div className="quest-rewards">
+              <div className="reward-item">
+                <span className="reward-value">{task.xpReward}</span>
+                <span className="reward-label">XP</span>
               </div>
-              <div className="reward-item gc">
-                <span className="icon">💎</span>
-                <div className="value">
-                  {task.type === 'bounty' ? (task as Bounty).rewardPool : task.gcReward}
-                </div>
-                <div className="label">
-                  {task.type === 'bounty' ? 'GC Pool' : 'GC'}
-                </div>
+              <div className="reward-item">
+                <span className="reward-value">{task.gcReward}</span>
+                <span className="reward-label"><GrindCoin size="medium" /> GC</span>
               </div>
             </div>
           </div>

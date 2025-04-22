@@ -22,7 +22,7 @@ const MOCK_TEAMS: Team[] = [
   {
     id: '1',
     name: 'Cyber Sentinels',
-    icon: '🛡️',
+    icon: '/icons/grindcoin.gif',
     memberCount: 4,
     maxMembers: 6,
     description: 'Elite squad specializing in high-stakes bounties and cyber operations',
@@ -34,7 +34,7 @@ const MOCK_TEAMS: Team[] = [
   {
     id: '2',
     name: 'Neural Networks',
-    icon: '🧠',
+    icon: '/icons/grindcoin.gif',
     memberCount: 3,
     maxMembers: 4,
     description: 'AI enthusiasts and blockchain developers pushing the boundaries',
@@ -46,7 +46,7 @@ const MOCK_TEAMS: Team[] = [
   {
     id: '3',
     name: 'Quantum Raiders',
-    icon: '⚛️',
+    icon: '/icons/grindcoin.gif',
     memberCount: 5,
     maxMembers: 5,
     description: 'Full-stack development team with a focus on quantum computing',
@@ -58,7 +58,7 @@ const MOCK_TEAMS: Team[] = [
   {
     id: '4',
     name: 'Data Drifters',
-    icon: '💾',
+    icon: '/icons/grindcoin.gif',
     memberCount: 2,
     maxMembers: 6,
     description: 'Specializing in data analysis and pattern recognition',
@@ -70,7 +70,7 @@ const MOCK_TEAMS: Team[] = [
   {
     id: '5',
     name: 'Chain Breakers',
-    icon: '⛓️',
+    icon: '/icons/grindcoin.gif',
     memberCount: 3,
     maxMembers: 4,
     description: 'Blockchain security experts and smart contract auditors',
@@ -104,7 +104,9 @@ const TeamCard: React.FC<{
       whileHover={{ scale: 1.02 }}
     >
       <div className="team-header">
-        <div className="team-icon">{team.icon}</div>
+        <div className="team-icon">
+          <img src={team.icon} alt="Team Icon" className="team-icon-image" />
+        </div>
         <div className="team-info">
           <h3>{team.name}</h3>
           <div className="team-stats">
